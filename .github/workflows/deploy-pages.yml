@@ -29,13 +29,9 @@ jobs:
           bundler-cache: true
           working-directory: docs
 
-      - name: Setup Pages
-        id: pages
-        uses: actions/configure-pages@v5
-
       - name: Build with Jekyll
         working-directory: docs
-        run: bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}"
+        run: bundle exec jekyll build --baseurl "/Wiki.js-AddIn-Revit"
         env:
           JEKYLL_ENV: production
 
@@ -47,7 +43,7 @@ jobs:
   deploy:
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: https://devndc26.github.io/Wiki.js-AddIn-Revit
     runs-on: ubuntu-latest
     needs: build
     steps:
