@@ -1,0 +1,72 @@
+[
+  {
+    "path": "home",
+    "title": "RevitAddin - Documentation Wiki.js",
+    "file": "wiki-content/accueil.md",
+    "description": "Page d'accueil de la documentation RevitAddin",
+    "tags": ["revit", "addin", "documentation"]
+  },
+  {
+    "path": "revitaddin/vue-d-ensemble",
+    "title": "Vue d'ensemble du projet RevitAddin",
+    "file": "wiki-content/projet-revitaddin.md",
+    "description": "Objectif et périmètre du plugin RevitAddin",
+    "tags": ["revit", "architecture"]
+  },
+  {
+    "path": "revitaddin/architecture",
+    "title": "Architecture du plugin",
+    "file": "wiki-content/architecture.md",
+    "description": "Architecture technique de RevitAddin",
+    "tags": ["revit", "technique"]
+  },
+  {
+    "path": "revitaddin/installation-addon",
+    "title": "Installation du plugin RevitAddin",
+    "file": "wiki-content/installation-addon.md",
+    "description": "Guide d'installation du plugin",
+    "tags": ["installation", "revit"]
+  },
+  {
+    "path": "revitaddin/fonctions/vues",
+    "title": "Fonctions du panneau Vues",
+    "file": "wiki-content/fonctions/vues.md",
+    "description": "Documentation des fonctions de vues",
+    "tags": ["fonctions", "vues"]
+  },
+  {
+    "path": "revitaddin/fonctions/nuage-de-points",
+    "title": "Fonctions du panneau Nuage de point",
+    "file": "wiki-content/fonctions/nuage-de-points.md",
+    "description": "Fonctions liées au nuage de points",
+    "tags": ["fonctions", "nuage"]
+  },
+  {
+    "path": "revitaddin/fonctions/murs-et-ouvertures",
+    "title": "Fonctions des panneaux Murs et Ouvertures",
+    "file": "wiki-content/fonctions/murs-et-ouvertures.md",
+    "description": "Création de types murs, portes et fenêtres",
+    "tags": ["fonctions", "murs", "ouvertures"]
+  },
+  {
+    "path": "revitaddin/fonctions/etiquetage-et-feuilles",
+    "title": "Fonctions des panneaux Etiquetage et Feuille",
+    "file": "wiki-content/fonctions/etiquetage-et-feuilles.md",
+    "description": "Etiquetage structurel et cartouches",
+    "tags": ["fonctions", "etiquetage", "feuille"]
+  },
+  {
+    "path": "revitaddin/fonctions/outils-de-suivi",
+    "title": "Fonctions du panneau Outils",
+    "file": "wiki-content/fonctions/outils-de-suivi.md",
+    "description": "Temps projet et statistiques d'usage",
+    "tags": ["fonctions", "outils", "suivi"]
+  },
+  {
+    "path": "revitaddin/plan-de-publication",
+    "title": "Plan de publication dans Wiki.js",
+    "file": "wiki-content/plan-de-publication.md",
+    "description": "Structure de publication recommandée",
+    "tags": ["wiki", "publication"]
+  }
+]
