@@ -1,0 +1,33 @@
+title: RevitAddin Documentation
+description: Documentation complète du projet RevitAddin — add-in Revit 2026 en C# / .NET Framework 4.8
+baseurl: "/Wiki.js-AddIn-Revit"
+url: "https://devndc26.github.io"
+
+theme: just-the-docs
+
+# Paramètres Just the Docs
+search_enabled: true
+search:
+  heading_level: 2
+  previews: 3
+
+# Liens navbar
+aux_links:
+  "GitHub":
+    - "https://github.com/devndc26/Wiki.js-AddIn-Revit"
+
+aux_links_new_tab: true
+
+# Footer
+footer_content: "Documentation RevitAddin — Revit 2026 / .NET 4.8"
+
+# Couleur principale
+color_scheme: light
+
+# Plugins
+plugins:
+  - jekyll-seo-tag
+
+# Encoding
+encoding: utf-8
+lang: fr
