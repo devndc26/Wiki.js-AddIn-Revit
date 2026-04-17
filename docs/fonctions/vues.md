@@ -21,16 +21,23 @@ Cette commande évite de recréer manuellement les coupes nécessaires à l'anal
 
 ### Fonctionnement général
 
-1. ouverture d'une fenêtre d'options ;
-2. lecture du décalage de délimitation éloignée ;
-3. analyse des grilles et des niveaux ;
-4. création des vues de coupe ;
-5. marquage des vues créées pour les identifier ultérieurement.
+1. **Fenêtre d'options** : Ouverture d'une interface pour saisir les paramètres de décalage ;
+2. **Analyse géométrique** : Lecture du décalage de délimitation éloignée (en mètres) ;
+3. **Détection des axes** : Analyse automatique des grilles et des niveaux du projet ;
+4. **Création des vues** : Génération des vues de coupe pour chaque grille (une par niveau) ;
+5. **Marquage** : Ajout d'un marqueur Extensible Storage pour identifier les vues créées.
 
-### Paramètres connus
+### Paramètres
 
-- **Décalage de la délimitation éloignée** : distance en mètres appliquée à la profondeur de la vue ;
-- **Cacher pour une échelle plus petite que** : champ présent mais non appliqué actuellement.
+- **Décalage de la délimitation éloignée** : distance en mètres ajoutée à la profondeur de la vue de coupe ;
+- **Nom par défaut** : les vues sont nommées "Coupe Grille" (avec suffixe automatique si doublon).
+
+### Implémentation technique
+
+- Classe : `Command.cs` → `IExternalCommand`
+- Utilise `FilteredElementCollector` pour analyser les grilles et niveaux
+- Schéma Extensible Storage : GUID `A0E6512A-1904-47A1-BF7F-3073E9B44E6D` pour marquer les vues créées
+- Conversion d'unités : mètres (interface utilisateur) ↔ unités internes Revit
 
 ### Cas d'usage
 
@@ -48,22 +55,29 @@ Créer automatiquement les cotes entre axes de grilles visibles ou sélectionné
 
 ### Utilité
 
-La commande réduit fortement le temps de cotation des trames et homogénéise la présentation.
+La commande réduit fortement le temps de cotation des trames et homogénéise la présentation en créant une chaîne de cotes intermédiaires plus une cote globale.
 
 ### Fonctionnement général
 
-1. récupération de la sélection utilisateur si elle existe ;
-2. sinon, analyse des grilles visibles dans la vue active ;
-3. détection de la plus grande série de grilles parallèles ;
-4. création d'une cote chaînée ;
-5. création d'une cote globale entre la première et la dernière grille.
+1. **Détection de vue** : Valide que la vue active est un plan ou une coupe ;
+2. **Récupération des grilles** : Analyse soit la sélection utilisateur, soit les grilles visibles ;
+3. **Groupement parallèle** : Détecte les séries de grilles parallèles (tolérance : 1e-4) ;
+4. **Hiérarchisation** : Sélectionne la plus grande série de grilles ;
+5. **Création des cotes** : Ajoute une chaîne de cotes intermédiaires + une cote globale.
 
 ### Résultat attendu
 
 L'utilisateur obtient deux niveaux de lecture :
 
-- les intervalles intermédiaires ;
-- la dimension totale de la trame.
+- les intervalles intermédiaires (cote chaînée) ;
+- la dimension totale de la trame (cote globale).
+
+### Implémentation technique
+
+- Classe : `DimensionGridsCommand.cs` → `IExternalCommand`
+- Fonctionne en plan et en coupe/élévation
+- Détecte les groupes parallèles avec analyse géométrique
+- Cote dimensionnelle avec texte automatique
 
 ---
 
@@ -71,7 +85,7 @@ L'utilisateur obtient deux niveaux de lecture :
 
 ### But
 
-Créer ou mettre à jour une vue 3D avec section box pilotable depuis une fenêtre dédiée.
+Créer ou mettre à jour une vue 3D avec section box dynamiquement contrôlable depuis une fenêtre dédiée.
 
 ### Utilité
 
@@ -79,17 +93,24 @@ Cette fonction aide à isoler une zone de travail dans le modèle, notamment pou
 
 ### Fonctionnement général
 
-- calcule les limites XY du contexte ;
-- propose plusieurs orientations ;
-- applique les modifications en temps réel via un handler externe ;
-- conserve une fenêtre persistante pour ajuster le cadrage sans relancer la commande.
+- **Initialisation** : Calcule les limites XY du contexte du projet ;
+- **Interface graphique** : Propose plusieurs orientations (Top, Side, 3D) avec sliders ;
+- **Mise à jour temps réel** : Applique les modifications via `SectionBoxUpdateHandler` ;
+- **Persistance** : Conserve une fenêtre persistante pour ajuster le cadrage sans relancer la commande.
 
-### Réglages proposés
+### Paramètres contrôlables
 
-- orientation Top ;
-- orientation Side ;
-- vue 3D ;
-- sliders d'élévation et d'épaisseur.
+- **Orientation** : Top, Side, vue 3D personnalisée
+- **Élévation (Z)** : Slider pour déplacer le plan de base
+- **Épaisseur** : Slider pour modifier la profondeur (ViewDepth)
+- **Limites XY** : Automatiquement calculées d'après les grilles/niveaux
+
+### Implémentation technique
+
+- Classe : `CreateCubeBoxCommand.cs` + `SectionBoxUpdateHandler.cs`
+- `SectionBoxUpdateHandler` : implémente `IExternalEventHandler` pour les modifications temps réel
+- Interface : `CubeBoxOptionsWindow.cs` (Windows Forms)
+- Gestion transactions : Contrôles internes via Event Handler
 
 ---
 
@@ -97,15 +118,29 @@ Cette fonction aide à isoler une zone de travail dans le modèle, notamment pou
 
 ### But
 
-Ajuster dynamiquement la plage de vue de la vue de plan active.
+Ajuster dynamiquement la plage de vue (View Range) d'une vue de plan active.
 
 ### Utilité
 
-La commande simplifie un réglage souvent fastidieux dans les propriétés natives de Revit.
+La commande simplifie un réglage souvent fastidieux dans les propriétés natives de Revit en exposant une interface dédiée.
 
 ### Fonctionnement général
 
-1. validation que la vue active est un plan ;
-2. ouverture d'une fenêtre avec quatre sliders ;
-3. envoi des valeurs au `PlanViewRangeUpdateHandler` ;
-4. mise à jour des offsets Top, Cut, Bottom et ViewDepth.
+1. **Validation** : Vérifie que la vue active est un plan 2D ;
+2. **Interface** : Ouvre une fenêtre avec quatre sliders indépendants ;
+3. **Transmission** : Envoie les valeurs au `PlanViewRangeUpdateHandler` ;
+4. **Mise à jour** : Modifie en temps réel les offsets Top, Cut, Bottom et ViewDepth.
+
+### Paramètres contrôlables
+
+- **Top** : Hauteur du plan de coupe supérieur
+- **Cut** : Altitude du plan de découpe principal
+- **Bottom** : Hauteur du plan de coupe inférieur
+- **View Depth** : Profondeur additionnelle au-delà du plan de base
+
+### Implémentation technique
+
+- Classe : `ActiveViewRangeCommand.cs` + `PlanViewRangeUpdateHandler.cs`
+- `PlanViewRangeUpdateHandler` : implémente `IExternalEventHandler`
+- Interface : `PlanViewRangeOptionsWindow.cs` (Windows Forms)
+- Restriction : Valide que la vue est bien un plan avant application

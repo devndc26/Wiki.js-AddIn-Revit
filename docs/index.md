@@ -32,7 +32,7 @@ Le plugin ajoute un onglet **ndc26** dans le ruban Revit avec plusieurs panneaux
 | Ouvertures | Créer Type Porte, Créer Type Fenêtre |
 | Etiquetage | Etiqueter Structure |
 | Feuille | Date Cartouche |
-| Outils | Temps Projet, Stats Usage |
+| Outils | Temps Projet, Stats Usage, À propos |
 
 ## Parcours conseillé
 
